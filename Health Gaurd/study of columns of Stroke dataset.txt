@@ -1,0 +1,150 @@
+Analysis of colums in stroke dataset.
+
+1. sex
+
+Type: Categorical (binary, 0 or 1)
+Effect: Certain studies suggest that males and females may have varying risks of stroke due to biological, hormonal, or behavioral differences. However, gender alone is rarely a significant predictor without other risk factors.
+
+2. age
+
+Type: Numerical
+Effect: Age is one of the most significant risk factors for stroke. The likelihood increases with age due to changes in blood vessels and higher prevalence of underlying conditions like hypertension and diabetes.
+
+3. hypertension
+
+Type: Categorical (binary, 0 or 1)
+Effect: High blood pressure is a major risk factor for stroke. Persistent hypertension can damage blood vessels and lead to blockages or ruptures.
+
+4. heart_disease
+
+Type: Categorical (binary, 0 or 1)
+Effect: Heart conditions like atrial fibrillation or congestive heart failure increase the risk of stroke by affecting blood flow and increasing the likelihood of clots.
+
+5. ever_married
+
+Type: Categorical (binary, 0 or 1)
+Effect: This might indirectly influence stroke risk due to associated social and behavioral factors. For example, married individuals may have different lifestyle habits or access to healthcare.
+
+6. work_type
+
+Type: Categorical (encoded as integers, e.g., 0 to 4)
+Effect: Certain work types may affect stroke risk due to stress levels, physical activity, or exposure to unhealthy habits (e.g., sedentary work or exposure to pollutants).
+
+7. Residence_type
+
+Type: Categorical (binary, 0 or 1)
+Effect: Urban or rural residence can influence stroke risk due to differences in access to healthcare, lifestyle, and environmental factors.
+
+8. avg_glucose_level
+
+Type: Numerical
+Effect: High glucose levels are often associated with diabetes, which is a significant risk factor for stroke. Consistently elevated glucose levels can damage blood vessels.
+
+9. bmi
+
+Type: Numerical
+Effect: Body Mass Index (BMI) is a measure of obesity. Obesity increases the risk of hypertension, diabetes, and cardiovascular diseases, all of which are major contributors to stroke.
+
+10. smoking_status
+
+Type: Categorical (encoded as integers)
+Effect: Smoking is a major risk factor for stroke as it damages blood vessels, raises blood pressure, and increases the likelihood of clots forming.
+
+
+
+
+Explaination of :
+
+y_pred = model.predict(x_test)
+y_proba = model.predict_proba(x_test)[:, 1]
+
+print(classification_report(y_test, y_pred))
+print("ROC-AUC Score:", roc_auc_score(y_test, y_proba))
+
+pls explain me line by line
+
+Here’s a line-by-line explanation of your code:
+
+Code:
+python
+Copy code
+y_pred = model.predict(x_test)
+Explanation:
+model.predict(x_test): This line uses the trained model (model) to predict the class labels (0 or 1) for the test dataset (x_test).
+y_pred: The predicted class labels (0 or 1) for each instance in the test data.
+0: Negative class (e.g., "no stroke").
+1: Positive class (e.g., "stroke").
+Example: If your model is classifying strokes, this will return an array of predictions like:
+
+css
+Copy code
+y_pred = [0, 1, 0, 1, 0]
+python
+Copy code
+y_proba = model.predict_proba(x_test)[:, 1]
+Explanation:
+model.predict_proba(x_test): This method gives the predicted probabilities for each class (for all classes). It returns an array with two columns (for binary classification):
+
+Column 0: Probability of class 0 (negative class).
+Column 1: Probability of class 1 (positive class).
+[:, 1]: This slice extracts the second column, which corresponds to the probability of the positive class (class 1).
+
+y_proba: This stores the predicted probabilities for the positive class (stroke in your case).
+
+Example: If model.predict_proba(x_test) returns:
+
+css
+Copy code
+[[0.8, 0.2],
+ [0.3, 0.7],
+ [0.9, 0.1],
+ [0.4, 0.6],
+ [0.7, 0.3]]
+Then:
+
+css
+Copy code
+y_proba = [0.2, 0.7, 0.1, 0.6, 0.3]
+This array gives the probability of stroke (1) for each test sample.
+
+python
+Copy code
+print(classification_report(y_test, y_pred))
+Explanation:
+classification_report(y_test, y_pred): This function generates a detailed classification report that includes:
+Precision: How many of the predicted positive instances are actually positive.
+Recall (Sensitivity): How many of the actual positive instances were correctly predicted as positive.
+F1-score: The harmonic mean of Precision and Recall, balancing both metrics.
+Support: The number of true instances of each class in the test set.
+It provides a performance summary for each class (0 and 1 in binary classification).
+
+Example output:
+
+markdown
+Copy code
+              precision    recall  f1-score   support
+           0       0.85      0.90      0.87       100
+           1       0.70      0.60      0.65        50
+    accuracy                           0.80       150
+   macro avg       0.78      0.75      0.76       150
+weighted avg       0.80      0.80      0.80       150
+python
+Copy code
+print("ROC-AUC Score:", roc_auc_score(y_test, y_proba))
+Explanation:
+roc_auc_score(y_test, y_proba): This function calculates the ROC-AUC score.
+ROC-AUC stands for Receiver Operating Characteristic - Area Under the Curve.
+It evaluates the model's ability to distinguish between the positive and negative classes by plotting the True Positive Rate (TPR) vs False Positive Rate (FPR).
+The AUC (Area Under the Curve) ranges from 0 to 1:
+1.0: Perfect classification.
+0.5: Random guessing.
+< 0.5: Worse than random guessing.
+y_test: The true labels of the test data.
+y_proba: The predicted probabilities for the positive class.
+Example: If your ROC-AUC score is 0.85, this means that your model has a good ability to distinguish between the two classes.
+
+Summary of the Whole Process:
+y_pred: Predicts the class labels (0 or 1) for each sample.
+y_proba: Predicts the probability of the positive class (1) for each sample.
+classification_report: Provides a detailed performance report with metrics like precision, recall, and F1-score.
+roc_auc_score: Evaluates the model's ability to distinguish between the classes using the ROC-AUC metric.
